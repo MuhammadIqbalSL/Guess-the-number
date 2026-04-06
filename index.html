@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Guess The Number AI</title>
+    <title>Guess The Number AI - SMK CBI</title>
     <style>
         /* ======================== 
            VARIABLES & CORE 
@@ -16,6 +16,7 @@
             --chat-user-bg: #1a1a1a;
             --text-white: #ffffff;
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --header-border-size: 2px;
         }
 
         * {
@@ -28,7 +29,6 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-white);
-            /* dVmin/dVh untuk handle address bar mobile */
             min-height: 100vh;
             min-height: 100dvh;
             display: flex;
@@ -37,54 +37,97 @@
         }
 
         /* ======================== 
-           HEADER (Sticky)
+           HEADER (With Integrated Image Labels)
            ======================== */
         header {
-            padding: 15px;
+            padding: 20px 10px;
             display: flex;
             justify-content: center;
+            align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
             background: var(--bg-color);
         }
 
-        .header-container {
+        .header-main-container {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Spasi antara logo dan container judul */
             position: relative;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 10px 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            overflow: hidden;
         }
 
-        .header-container::before {
+        /* Logo Pentagon */
+        .header-logo {
+            width: 70px;
+            height: auto;
+            flex-shrink: 0;
+            display: block;
+        }
+
+        /* Container Judul (Teks) */
+        .header-title-box {
+            position: relative;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 10px 30px 10px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05); /* Tambahan border halus */
+        }
+
+        /* Karakter Ranger (Terintegrasi) */
+        .header-character {
+            position: absolute;
+            top: -20px; /* Sedikit keluar ke atas */
+            right: -10px; /* Sedikit keluar ke kanan */
+            height: calc(100% + 40px);
+            width: auto;
+            z-index: 5;
+            display: block;
+        }
+
+        /* Efek Glow Berputar pada Container Teks */
+        .header-title-box::before {
             content: '';
             position: absolute;
             top: -50%; left: -50%;
             width: 200%; height: 200%;
             background: conic-gradient(transparent, transparent, var(--neon-red), transparent);
-            animation: rotate 4s linear infinite;
+            animation: rotate Glow 4s linear infinite;
             z-index: -1;
         }
 
-        .header-container::after {
+        .header-title-box::after {
             content: '';
             position: absolute;
-            inset: 2px;
+            inset: var(--header-border-size);
             background: #0f0f0f;
-            border-radius: 13px;
+            border-radius: calc(12px - var(--header-border-size));
             z-index: -1;
         }
 
-        @keyframes rotate { 100% { transform: rotate(360deg); } }
+        @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
 
-        header h1 {
-            font-size: 1.2rem;
-            letter-spacing: 2px;
+        /* Styling Teks Judul */
+        .header-text-group {
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            letter-spacing: 1px;
             text-transform: uppercase;
             text-shadow: 0 0 10px var(--neon-red);
             white-space: nowrap;
+        }
+
+        .header-subtitle {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.5px;
+            margin-top: 2px;
         }
 
         /* ======================== 
@@ -96,7 +139,6 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            /* Biarkan body yang mengontrol scroll utama agar smooth di mobile */
         }
 
         .message {
@@ -173,7 +215,7 @@
             color: white;
             outline: none;
             transition: var(--transition);
-            font-size: 16px; /* Mencegah auto-zoom di iOS */
+            font-size: 16px; 
         }
 
         /* Placeholder Logic */
@@ -188,12 +230,10 @@
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
         }
 
-        /* Placeholder menjadi putih saat fokus */
         input:focus::placeholder {
             color: rgba(255, 255, 255, 1);
         }
 
-        /* Placeholder menghilang saat mulai mengetik */
         input:not(:placeholder-shown)::placeholder {
             opacity: 0;
         }
@@ -229,18 +269,39 @@
         input::-webkit-outer-spin-button, 
         input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
+        /* ======================== 
+           RESPONSIVE 
+           ======================== */
         @media (max-width: 480px) {
+            header { padding: 10px 5px; }
+            .header-main-container { gap: 8px; }
+            .header-logo { width: 50px; }
+            .header-title-box { padding: 8px 25px 8px 15px; border-radius: 10px; }
+            .header-title { font-size: 0.9rem; letter-spacing: 0.5px; }
+            .header-subtitle { font-size: 0.6rem; }
+            .header-character { top: -10px; right: -5px; height: calc(100% + 20px); }
+
             .message { max-width: 90%; }
             .input-section { padding: 15px; }
-            header h1 { font-size: 1rem; }
+            button#send-btn { width: 48px; height: 48px; }
+            button#send-btn svg { width: 20px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-container">
-            <h1>Guess The Number AI</h1>
+        <div class="header-main-container">
+            <img src="logo_cbi.png" alt="SMK CBI Logo" class="header-logo">
+            
+            <div class="header-title-box">
+                <img src="ranger_character.png" alt="Red Ranger AI" class="header-character">
+                
+                <div class="header-text-group">
+                    <div class="header-title">Guess The Number AI</div>
+                    <div class="header-subtitle">SMK CBI | #KodingDanKecerdasanArtifisial</div>
+                </div>
+            </div>
         </div>
     </header>
 
