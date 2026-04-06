@@ -33,10 +33,10 @@
         }
 
         /* ======================== 
-           HEADER RE-DESIGNED 
+           HEADER RE-FIXED
            ======================== */
         header {
-            padding: 40px 10px 20px 10px;
+            padding: 50px 10px 20px 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -52,83 +52,99 @@
             position: relative;
         }
 
-        /* Logo SMK CBI - Di luar box sebelah kiri */
+        /* Logo SMK CBI */
         .header-logo {
-            width: 90px;
+            width: 95px;
             height: auto;
-            z-index: 50;
-            margin-right: -10px;
-            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+            z-index: 110; /* Di atas segalanya */
+            margin-right: -15px;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
         }
 
-        /* Container Utama Judul */
+        /* Container Utama */
         .header-title-box {
             position: relative;
-            background: #0f0f0f;
-            padding: 15px 70px 15px 35px; /* Spasi kanan besar untuk Ranger */
-            border-radius: 15px;
+            padding: 18px 80px 18px 40px; 
             display: flex;
             align-items: center;
-            min-height: 70px;
-            /* Box ini tidak boleh overflow hidden agar Ranger bisa keluar */
+            min-height: 80px;
+            border-radius: 20px;
+            overflow: visible; /* Penting agar Ranger tidak terpotong */
         }
 
-        /* Elemen khusus untuk Animasi Border Glow */
-        .border-glow {
+        /* Lapisan Animasi Border (Glow Putar) */
+        .glow-wrapper {
             position: absolute;
-            inset: -2px; /* Sedikit lebih besar dari box */
-            border-radius: 17px;
-            background: conic-gradient(transparent, transparent, var(--neon-red), transparent);
-            animation: rotateGlow 4s linear infinite;
-            z-index: -1;
+            inset: 0;
+            border-radius: 20px;
+            padding: 3px; /* Ketebalan garis border */
+            background: rgba(255, 255, 255, 0.05);
+            overflow: hidden; /* Memotong gradient agar hanya di jalur border */
+            z-index: 1;
         }
 
-        /* Penutup background agar tengah box tetap gelap */
-        .box-inner-bg {
+        .glow-wrapper::before {
+            content: '';
             position: absolute;
-            inset: 2px;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent, 
+                transparent, 
+                var(--neon-red), 
+                transparent
+            );
+            animation: rotateGlow 3s linear infinite;
+        }
+
+        /* Penutup Tengah (Membuat gradient hanya muncul di pinggir) */
+        .box-content-bg {
+            position: absolute;
+            inset: 3px; /* Harus sama dengan padding glow-wrapper */
             background: #0f0f0f;
-            border-radius: 14px;
-            z-index: 0;
+            border-radius: 17px;
+            z-index: 2;
         }
 
         @keyframes rotateGlow { 
             100% { transform: rotate(360deg); } 
         }
 
-        /* Karakter Ranger - Lebih Besar & Di Atas Semuanya */
+        /* Ranger Karakter - Di Atas Glow */
         .header-character {
             position: absolute;
-            height: 160px; /* Ukuran diperbesar */
+            height: 180px; /* Diperbesar lagi */
             width: auto;
-            right: -30px;
+            right: -35px;
             bottom: -5px;
-            z-index: 100; /* Paling atas */
+            z-index: 120; /* Paling atas */
             pointer-events: none;
-            filter: drop-shadow(0 0 20px rgba(0,0,0,0.9));
+            filter: drop-shadow(0 0 25px rgba(0,0,0,1));
         }
 
         /* Teks Judul */
         .header-text-group {
             position: relative;
-            z-index: 10;
+            z-index: 10; /* Di atas box-content-bg */
         }
 
         .header-title {
-            font-size: 1.5rem; /* Ukuran lebih besar */
-            font-weight: 800;
-            letter-spacing: 1px;
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
             text-shadow: 0 0 15px var(--neon-red);
-            white-space: nowrap;
             color: #fff;
+            line-height: 1.2;
         }
 
         .header-subtitle {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            letter-spacing: 1px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
             font-weight: 500;
+            margin-top: 2px;
         }
 
         /* ======================== 
@@ -230,14 +246,14 @@
 
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-        /* Responsive Mobile */
         @media (max-width: 480px) {
-            header { padding-top: 50px; }
-            .header-logo { width: 70px; margin-right: -5px; }
-            .header-title-box { padding: 10px 55px 10px 25px; min-height: 60px; }
-            .header-title { font-size: 1.1rem; }
-            .header-subtitle { font-size: 0.65rem; }
-            .header-character { height: 130px; right: -20px; bottom: -5px; }
+            header { padding-top: 60px; }
+            .header-logo { width: 75px; }
+            .header-title-box { padding: 12px 65px 12px 30px; min-height: 65px; border-radius: 15px; }
+            .glow-wrapper, .box-content-bg { border-radius: 15px; }
+            .header-title { font-size: 1.2rem; }
+            .header-subtitle { font-size: 0.7rem; }
+            .header-character { height: 140px; right: -25px; }
         }
     </style>
 </head>
@@ -248,13 +264,13 @@
             <img src="smk_cbi.png" alt="Logo SMK CBI" class="header-logo">
             
             <div class="header-title-box">
-                <div class="border-glow"></div>
-                <div class="box-inner-bg"></div>
+                <div class="glow-wrapper"></div>
+                <div class="box-content-bg"></div>
                 
                 <img src="ranger-character.png" alt="Ranger" class="header-character">
                 
                 <div class="header-text-group">
-                    <div class="header-title">Guess The Number AI</div>
+                    <div class="header-title">GUESS THE NUMBER AI</div>
                     <div class="header-subtitle">SMK CBI | TP 2025/2026</div>
                 </div>
             </div>
