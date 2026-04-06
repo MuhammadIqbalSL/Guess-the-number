@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Guess The Number AI - SMK CBI</title>
     <style>
-        /* ======================== 
-           VARIABLES & CORE 
-           ======================== */
         :root {
             --bg-color: #0f0f0f;
             --primary-maroon: #800000;
@@ -16,7 +13,6 @@
             --chat-user-bg: #1a1a1a;
             --text-white: #ffffff;
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            --header-border-size: 3px; /* Border dipertebal */
         }
 
         * {
@@ -37,10 +33,10 @@
         }
 
         /* ======================== 
-           HEADER CUSTOMIZED 
+           HEADER RE-DESIGNED 
            ======================== */
         header {
-            padding: 30px 15px 15px 15px; /* Tambah padding atas agar ranger tidak terpotong */
+            padding: 40px 10px 20px 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -54,64 +50,63 @@
             display: flex;
             align-items: center;
             position: relative;
-            /* Memberikan ruang ekstra ke kiri untuk logo */
-            padding-left: 20px; 
         }
 
-        /* Logo SMK CBI (Posisi Lebih ke Kiri) */
+        /* Logo SMK CBI - Di luar box sebelah kiri */
         .header-logo {
-            width: 85px; /* Ukuran disesuaikan */
+            width: 90px;
             height: auto;
-            position: relative;
-            z-index: 20;
-            margin-right: -15px; /* Membuat logo agak sedikit overlap ke box */
+            z-index: 50;
+            margin-right: -10px;
             filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
         }
 
-        /* Container Judul (Box dengan Border Lebar) */
+        /* Container Utama Judul */
         .header-title-box {
             position: relative;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 12px 60px 12px 30px; /* Padding kanan lebar untuk ranger */
+            background: #0f0f0f;
+            padding: 15px 70px 15px 35px; /* Spasi kanan besar untuk Ranger */
             border-radius: 15px;
-            backdrop-filter: blur(10px);
-            /* Menghilangkan overflow agar ranger bisa keluar dari box */
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            min-height: 70px;
+            /* Box ini tidak boleh overflow hidden agar Ranger bisa keluar */
         }
 
-        /* Karakter Ranger (Lebih Besar & Di Atas Border) */
-        .header-character {
+        /* Elemen khusus untuk Animasi Border Glow */
+        .border-glow {
             position: absolute;
-            height: 140px; /* Ukuran diperbesar */
-            width: auto;
-            bottom: -5px; /* Menempel di bawah */
-            right: -25px; /* Menggantung di kanan */
-            z-index: 30; /* Pastikan di atas border glow */
-            pointer-events: none;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.8));
-        }
-
-        /* Efek Glow Berputar */
-        .header-title-box::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
+            inset: -2px; /* Sedikit lebih besar dari box */
+            border-radius: 17px;
             background: conic-gradient(transparent, transparent, var(--neon-red), transparent);
             animation: rotateGlow 4s linear infinite;
             z-index: -1;
         }
 
-        .header-title-box::after {
-            content: '';
+        /* Penutup background agar tengah box tetap gelap */
+        .box-inner-bg {
             position: absolute;
-            inset: var(--header-border-size);
+            inset: 2px;
             background: #0f0f0f;
-            border-radius: calc(15px - var(--header-border-size));
-            z-index: -1;
+            border-radius: 14px;
+            z-index: 0;
         }
 
-        @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
+        @keyframes rotateGlow { 
+            100% { transform: rotate(360deg); } 
+        }
+
+        /* Karakter Ranger - Lebih Besar & Di Atas Semuanya */
+        .header-character {
+            position: absolute;
+            height: 160px; /* Ukuran diperbesar */
+            width: auto;
+            right: -30px;
+            bottom: -5px;
+            z-index: 100; /* Paling atas */
+            pointer-events: none;
+            filter: drop-shadow(0 0 20px rgba(0,0,0,0.9));
+        }
 
         /* Teks Judul */
         .header-text-group {
@@ -120,23 +115,24 @@
         }
 
         .header-title {
-            font-size: 1.25rem;
-            font-weight: bold;
+            font-size: 1.5rem; /* Ukuran lebih besar */
+            font-weight: 800;
             letter-spacing: 1px;
             text-transform: uppercase;
-            text-shadow: 0 0 10px var(--neon-red);
+            text-shadow: 0 0 15px var(--neon-red);
             white-space: nowrap;
+            color: #fff;
         }
 
         .header-subtitle {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.7);
-            letter-spacing: 0.5px;
-            margin-top: 3px;
+            letter-spacing: 1px;
+            font-weight: 500;
         }
 
         /* ======================== 
-           CHAT & INPUT AREA (Sama Seperti Sebelumnya)
+           CHAT AREA 
            ======================== */
         #chat-area {
             flex: 1;
@@ -182,6 +178,9 @@
         .ai .bubble { background-color: var(--primary-maroon); color: white; border-bottom-left-radius: 4px; }
         .user .bubble { background-color: var(--chat-user-bg); color: white; border-bottom-right-radius: 4px; border: 1px solid rgba(255,255,255,0.08); }
 
+        /* ======================== 
+           INPUT AREA 
+           ======================== */
         .input-section {
             padding: 20px;
             position: sticky;
@@ -194,7 +193,7 @@
             z-index: 100;
         }
 
-        .input-wrapper { flex: 1; position: relative; }
+        .input-wrapper { flex: 1; }
 
         input {
             width: 100%;
@@ -233,12 +232,12 @@
 
         /* Responsive Mobile */
         @media (max-width: 480px) {
-            header { padding-top: 40px; }
-            .header-logo { width: 65px; }
-            .header-character { height: 110px; right: -15px; }
-            .header-title-box { padding: 8px 45px 8px 25px; }
-            .header-title { font-size: 0.95rem; }
+            header { padding-top: 50px; }
+            .header-logo { width: 70px; margin-right: -5px; }
+            .header-title-box { padding: 10px 55px 10px 25px; min-height: 60px; }
+            .header-title { font-size: 1.1rem; }
             .header-subtitle { font-size: 0.65rem; }
+            .header-character { height: 130px; right: -20px; bottom: -5px; }
         }
     </style>
 </head>
@@ -246,10 +245,13 @@
 
     <header>
         <div class="header-main-container">
-            <img src="smk_cbi.png" alt="SMK CBI Logo" class="header-logo">
+            <img src="smk_cbi.png" alt="Logo SMK CBI" class="header-logo">
             
             <div class="header-title-box">
-                <img src="ranger-character.png" alt="Red Ranger" class="header-character">
+                <div class="border-glow"></div>
+                <div class="box-inner-bg"></div>
+                
+                <img src="ranger-character.png" alt="Ranger" class="header-character">
                 
                 <div class="header-text-group">
                     <div class="header-title">Guess The Number AI</div>
