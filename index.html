@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Guess The Number AI - SMK CBI</title>
+    <title>Number Guessing AI - SMK CBI</title>
     <style>
         :root {
             --bg-color: #0f0f0f;
@@ -15,244 +15,76 @@
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-white);
             min-height: 100vh;
-            min-height: 100dvh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
         }
 
-        /* ======================== 
-           HEADER RE-FIXED
-           ======================== */
-        header {
-            padding: 50px 10px 20px 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--bg-color);
-        }
+        /* ======================== HEADER ======================== */
+        header { padding: 50px 10px 20px 10px; display: flex; justify-content: center; align-items: center; position: sticky; top: 0; z-index: 100; background: var(--bg-color); }
+        .header-main-container { display: flex; align-items: center; position: relative; }
+        .header-logo { width: 95px; height: auto; z-index: 110; margin-right: -15px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.8)); }
+        .header-title-box { position: relative; padding: 18px 80px 18px 40px; display: flex; align-items: center; min-height: 80px; border-radius: 20px; }
+        .glow-wrapper { position: absolute; inset: 0; border-radius: 20px; padding: 3px; background: rgba(255, 255, 255, 0.05); overflow: hidden; z-index: 1; }
+        .glow-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, transparent, var(--neon-red), transparent); animation: rotateGlow 3s linear infinite; }
+        .box-content-bg { position: absolute; inset: 3px; background: #0f0f0f; border-radius: 17px; z-index: 2; }
+        @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
+        .header-character { position: absolute; height: 180px; right: -35px; bottom: -5px; z-index: 120; pointer-events: none; filter: drop-shadow(0 0 25px rgba(0,0,0,1)); }
+        .header-text-group { position: relative; z-index: 10; }
+        .header-title { font-size: 1.6rem; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; text-shadow: 0 0 15px var(--neon-red); }
+        .header-subtitle { font-size: 0.85rem; color: rgba(255, 255, 255, 0.8); margin-top: 2px; }
 
-        .header-main-container {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-
-        /* Logo SMK CBI */
-        .header-logo {
-            width: 95px;
-            height: auto;
-            z-index: 110; /* Di atas segalanya */
-            margin-right: -15px;
-            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
-        }
-
-        /* Container Utama */
-        .header-title-box {
-            position: relative;
-            padding: 18px 80px 18px 40px; 
-            display: flex;
-            align-items: center;
-            min-height: 80px;
-            border-radius: 20px;
-            overflow: visible; /* Penting agar Ranger tidak terpotong */
-        }
-
-        /* Lapisan Animasi Border (Glow Putar) */
-        .glow-wrapper {
-            position: absolute;
-            inset: 0;
-            border-radius: 20px;
-            padding: 3px; /* Ketebalan garis border */
-            background: rgba(255, 255, 255, 0.05);
-            overflow: hidden; /* Memotong gradient agar hanya di jalur border */
-            z-index: 1;
-        }
-
-        .glow-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(
-                transparent, 
-                transparent, 
-                var(--neon-red), 
-                transparent
-            );
-            animation: rotateGlow 3s linear infinite;
-        }
-
-        /* Penutup Tengah (Membuat gradient hanya muncul di pinggir) */
-        .box-content-bg {
-            position: absolute;
-            inset: 3px; /* Harus sama dengan padding glow-wrapper */
-            background: #0f0f0f;
-            border-radius: 17px;
-            z-index: 2;
-        }
-
-        @keyframes rotateGlow { 
-            100% { transform: rotate(360deg); } 
-        }
-
-        /* Ranger Karakter - Di Atas Glow */
-        .header-character {
-            position: absolute;
-            height: 180px; /* Diperbesar lagi */
-            width: auto;
-            right: -35px;
-            bottom: -5px;
-            z-index: 120; /* Paling atas */
-            pointer-events: none;
-            filter: drop-shadow(0 0 25px rgba(0,0,0,1));
-        }
-
-        /* Teks Judul */
-        .header-text-group {
-            position: relative;
-            z-index: 10; /* Di atas box-content-bg */
-        }
-
-        .header-title {
-            font-size: 1.6rem;
-            font-weight: 900;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            text-shadow: 0 0 15px var(--neon-red);
-            color: #fff;
-            line-height: 1.2;
-        }
-
-        .header-subtitle {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-            margin-top: 2px;
-        }
-
-        /* ======================== 
-           CHAT AREA 
-           ======================== */
-        #chat-area {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .message {
-            display: flex;
-            align-items: flex-end;
-            gap: 12px;
-            max-width: 85%;
-            animation: fadeInUp 0.4s ease forwards;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        /* ======================== CHAT AREA ======================== */
+        #chat-area { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+        .message { display: flex; align-items: flex-end; gap: 12px; max-width: 85%; animation: fadeInUp 0.4s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .message.ai { align-self: flex-start; }
         .message.user { align-self: flex-end; flex-direction: row-reverse; }
-
-        .avatar {
-            width: 38px; height: 38px; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; flex-shrink: 0;
-        }
-
+        .avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
         .ai .avatar { background: linear-gradient(135deg, var(--primary-maroon), #220000); }
         .user .avatar { background: #e0e0e0; }
         .avatar svg { width: 20px; fill: white; }
         .user .avatar svg { fill: #333; }
-
-        .bubble {
-            padding: 12px 18px;
-            border-radius: 18px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
+        .bubble { padding: 12px 18px; border-radius: 18px; font-size: 0.95rem; line-height: 1.5; position: relative; }
         .ai .bubble { background-color: var(--primary-maroon); color: white; border-bottom-left-radius: 4px; }
         .user .bubble { background-color: var(--chat-user-bg); color: white; border-bottom-right-radius: 4px; border: 1px solid rgba(255,255,255,0.08); }
 
-        /* ======================== 
-           INPUT AREA 
-           ======================== */
-        .input-section {
-            padding: 20px;
-            position: sticky;
-            bottom: 0;
-            width: 100%;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            background: linear-gradient(to top, var(--bg-color) 70%, transparent);
-            z-index: 100;
-        }
-
-        .input-wrapper { flex: 1; }
-
-        input {
-            width: 100%;
-            padding: 16px 25px;
-            background: var(--primary-maroon);
-            border: 2px solid transparent;
-            border-radius: 50px;
+        /* BUTTONS STYLING */
+        .btn-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; transition: all 0.4s ease; }
+        .choice-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
             color: white;
-            outline: none;
-            transition: var(--transition);
-            font-size: 16px; 
-        }
-
-        input:focus {
-            background: var(--dark-maroon);
-            border-color: var(--neon-red);
-        }
-
-        button#send-btn {
-            background: var(--primary-maroon);
-            border: none;
-            width: 55px; height: 55px;
-            border-radius: 50%;
+            padding: 10px 20px;
+            border-radius: 10px;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
+            font-size: 0.85rem;
+            font-weight: 600;
             transition: var(--transition);
         }
+        .choice-btn:hover { background: var(--primary-maroon); border-color: var(--neon-red); }
+        .btn-container.hide { opacity: 0; transform: translateY(10px); pointer-events: none; }
 
-        button#send-btn:hover { background: var(--neon-red); transform: scale(1.05); }
-        button#send-btn svg { width: 24px; fill: white; transform: rotate(45deg); margin-left: -3px; }
-
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        /* ======================== INPUT AREA ======================== */
+        .input-section { padding: 20px; position: sticky; bottom: 0; display: flex; gap: 12px; background: linear-gradient(to top, var(--bg-color) 70%, transparent); z-index: 100; }
+        .input-wrapper { flex: 1; }
+        input { width: 100%; padding: 16px 25px; background: var(--primary-maroon); border: 2px solid transparent; border-radius: 50px; color: white; outline: none; font-size: 16px; transition: var(--transition); }
+        input:focus { border-color: var(--neon-red); background: var(--dark-maroon); }
+        input:disabled { opacity: 0.5; cursor: not-allowed; }
+        button#send-btn { background: var(--primary-maroon); border: none; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: var(--transition); }
+        button#send-btn:hover:not(:disabled) { background: var(--neon-red); transform: scale(1.05); }
 
         @media (max-width: 480px) {
             header { padding-top: 60px; }
             .header-logo { width: 75px; }
-            .header-title-box { padding: 12px 65px 12px 30px; min-height: 65px; border-radius: 15px; }
-            .glow-wrapper, .box-content-bg { border-radius: 15px; }
+            .header-title-box { padding: 12px 65px 12px 30px; min-height: 65px; }
             .header-title { font-size: 1.2rem; }
-            .header-subtitle { font-size: 0.7rem; }
             .header-character { height: 140px; right: -25px; }
         }
     </style>
@@ -262,13 +94,10 @@
     <header>
         <div class="header-main-container">
             <img src="smk_cbi.png" alt="Logo SMK CBI" class="header-logo">
-            
             <div class="header-title-box">
                 <div class="glow-wrapper"></div>
                 <div class="box-content-bg"></div>
-                
-                <img src="ranger-character.png" alt="Ranger" class="header-character">
-                
+                <img src="ranger-character.png" alt="Character" class="header-character">
                 <div class="header-text-group">
                     <div class="header-title">GUESS THE NUMBER AI</div>
                     <div class="header-subtitle">SMK CBI | TP 2025/2026</div>
@@ -281,17 +110,21 @@
 
     <div class="input-section">
         <div class="input-wrapper">
-            <input type="number" id="user-input" placeholder="...set max number" autocomplete="off">
+            <input type="text" id="user-input" placeholder="Menunggu pilihan..." disabled autocomplete="off">
         </div>
-        <button id="send-btn">
-            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+        <button id="send-btn" disabled>
+            <svg viewBox="0 0 24 24" width="24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
         </button>
     </div>
 
     <script>
+        let gameState = "CHOOSE_MODE"; 
         let targetNumber = null;
         let threshold = null;
-        let isWaitingForThreshold = true;
+        let maxLives = 0;
+        let currentLives = 0;
+        let isInfinite = false;
+        let guessedNumbers = [];
 
         const chatArea = document.getElementById('chat-area');
         const userInput = document.getElementById('user-input');
@@ -300,59 +133,172 @@
         const aiIcon = `<svg viewBox="0 0 24 24"><path d="M20,18c1.1,0,2-0.9,2-2V6c0-1.1-0.9-2-2-2H4C2.9,4,2,4.9,2,6v10c0,1.1,0.9,2,2,2H0v2h24v-2H20z M4,6h16v10H4V6z M7,9h10v2H7V9z M7,12h7v2H7V12z"></path></svg>`;
         const userIcon = `<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>`;
 
-        function scrollToBottom() {
-            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-        }
+        function scrollToBottom() { window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' }); }
 
-        function addMessage(sender, text) {
+        function addMessage(sender, text, withButtons = false) {
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('message', sender);
-            const icon = sender === 'ai' ? aiIcon : userIcon;
-            msgDiv.innerHTML = `<div class="avatar">${icon}</div><div class="bubble">${text}</div>`;
+            
+            let btnHtml = '';
+            if (withButtons) {
+                btnHtml = `
+                    <div class="btn-container" id="current-btns">
+                        <button class="choice-btn" onclick="selectMode('normal')">NORMAL</button>
+                        <button class="choice-btn" onclick="selectMode('custom')">CUSTOM</button>
+                        <button class="choice-btn" onclick="selectMode('infinite')">INFINITE</button>
+                    </div>
+                `;
+            }
+
+            msgDiv.innerHTML = `
+                <div class="avatar">${sender === 'ai' ? aiIcon : userIcon}</div>
+                <div class="bubble">
+                    ${text}
+                    ${btnHtml}
+                </div>
+            `;
             chatArea.appendChild(msgDiv);
             setTimeout(scrollToBottom, 50);
         }
 
-        function askThreshold() {
-            isWaitingForThreshold = true;
-            userInput.placeholder = "...set max number";
-            addMessage("ai", "Sistem diinisialisasi. Tentukan batas angka maksimal (contoh: 10, 50, atau 100).");
-        }
-
-        function handleGame() {
-            const val = parseInt(userInput.value);
-            if (isNaN(val) || val <= 0) return;
-
-            if (isWaitingForThreshold) {
-                threshold = val;
-                targetNumber = Math.floor(Math.random() * threshold) + 1;
-                addMessage("user", `Batas maksimal: ${val}`);
-                userInput.value = "";
-                setTimeout(() => {
-                    addMessage("ai", `Target ditetapkan (1-${threshold}). Silakan tebak angkanya!`);
-                    isWaitingForThreshold = false;
-                    userInput.placeholder = "...type your guess";
-                }, 600);
-            } else {
-                addMessage("user", val);
-                userInput.value = "";
-                setTimeout(() => {
-                    if (val === targetNumber) {
-                        addMessage("ai", `🎯 **TEPAT!** Angkanya adalah **${targetNumber}**. Kamu menang!`);
-                        setTimeout(() => { addMessage("ai", "Me-reset sistem..."); setTimeout(askThreshold, 1000); }, 1500);
-                    } else if (val < targetNumber) {
-                        addMessage("ai", "Input terlalu **rendah**.");
-                    } else {
-                        addMessage("ai", "Input terlalu **tinggi**.");
-                    }
-                }, 600);
+        function removeButtons() {
+            const btnContainer = document.getElementById('current-btns');
+            if (btnContainer) {
+                btnContainer.classList.add('hide');
+                setTimeout(() => btnContainer.remove(), 400);
             }
         }
 
-        window.onload = askThreshold;
+        function initGame() {
+            gameState = "CHOOSE_MODE";
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+            userInput.placeholder = "Pilih mode permainan...";
+            addMessage("ai", "Sistem siap. Pilih mode nyawa yang ingin anda gunakan:", true);
+        }
+
+        function selectMode(mode) {
+            removeButtons();
+            if (mode === 'normal') {
+                isInfinite = false;
+                gameState = "SET_THRESHOLD";
+                addMessage("user", "MODE NORMAL");
+                askThreshold();
+            } else if (mode === 'custom') {
+                isInfinite = false;
+                gameState = "SET_CUSTOM_LIVES";
+                addMessage("user", "MODE CUSTOM");
+                setTimeout(() => {
+                    addMessage("ai", "Masukkan **JUMLAH NYAWA** yang diinginkan:");
+                    enableInput("...input jumlah nyawa");
+                }, 500);
+            } else if (mode === 'infinite') {
+                isInfinite = true;
+                gameState = "SET_THRESHOLD";
+                addMessage("user", "MODE INFINITE");
+                askThreshold();
+            }
+        }
+
+        function enableInput(placeholder) {
+            userInput.disabled = false;
+            sendBtn.disabled = false;
+            userInput.type = "number";
+            userInput.placeholder = placeholder;
+            userInput.focus();
+        }
+
+        function askThreshold() {
+            setTimeout(() => {
+                addMessage("ai", "Tentukan **BATAS ANGKA MAKSIMAL** (Range: 1 - N):");
+                enableInput("...input angka maksimal");
+            }, 500);
+        }
+
+        function handleGame() {
+            const input = userInput.value.trim();
+            if (!input) return;
+
+            if (gameState === "SET_CUSTOM_LIVES") {
+                const lives = parseInt(input);
+                if (isNaN(lives) || lives <= 0) return;
+                maxLives = lives;
+                currentLives = lives;
+                addMessage("user", `Nyawa ditetapkan: ${lives}`);
+                userInput.value = "";
+                gameState = "SET_THRESHOLD";
+                askThreshold();
+
+            } else if (gameState === "SET_THRESHOLD") {
+                const num = parseInt(input);
+                if (isNaN(num) || num <= 1) return;
+                threshold = num;
+                targetNumber = Math.floor(Math.random() * threshold) + 1;
+                addMessage("user", `Batas Maksimal: ${threshold}`);
+
+                if (!isInfinite && maxLives === 0) {
+                    maxLives = Math.floor((threshold - 10) / 20) * 2 + 3;
+                    if (threshold < 10) maxLives = 3;
+                    currentLives = maxLives;
+                }
+
+                gameState = "PLAYING";
+                userInput.value = "";
+                setTimeout(() => {
+                    const lifeStatus = isInfinite ? "TAK TERBATAS" : `${currentLives} KALI`;
+                    addMessage("ai", `Konfigurasi selesai.<br>Batas: **1 - ${threshold}**<br>Kesempatan: **${lifeStatus}**.<br>Sistem menunggu input angka pertama.`);
+                    userInput.placeholder = "...masukkan tebakan";
+                }, 500);
+
+            } else if (gameState === "PLAYING") {
+                const val = parseInt(input);
+                if (isNaN(val)) return;
+                addMessage("user", val);
+                userInput.value = "";
+
+                setTimeout(() => {
+                    if (val > threshold || val < 1) {
+                        addMessage("ai", `**ERROR:** Input ${val} berada di luar jangkauan sistem (1-${threshold}).`);
+                        return;
+                    }
+                    if (guessedNumbers.includes(val)) {
+                        addMessage("ai", `**PERINGATAN:** Angka ${val} sudah pernah dimasukkan.`);
+                        return;
+                    }
+
+                    guessedNumbers.push(val);
+
+                    if (val === targetNumber) {
+                        addMessage("ai", `**BERHASIL:** Angka **${targetNumber}** ditemukan secara tepat.`);
+                        setTimeout(() => { addMessage("ai", "Melakukan sinkronisasi ulang..."); resetAll(); }, 2000);
+                    } else {
+                        let hint = val < targetNumber ? "terlalu **RENDAH**" : "terlalu **TINGGI**";
+                        if (isInfinite) {
+                            addMessage("ai", `Input ${hint}. (Mode Infinite)`);
+                        } else {
+                            currentLives--;
+                            if (currentLives > 0) {
+                                addMessage("ai", `Input ${hint}.<br>Sisa Kesempatan: **${currentLives}**`);
+                            } else {
+                                addMessage("ai", `**GAGAL:** Kesempatan habis. Angka target adalah **${targetNumber}**.`);
+                                setTimeout(() => { addMessage("ai", "Memulai ulang sesi..."); resetAll(); }, 2000);
+                            }
+                        }
+                    }
+                }, 500);
+            }
+        }
+
+        function resetAll() {
+            guessedNumbers = [];
+            maxLives = 0;
+            currentLives = 0;
+            initGame();
+        }
+
+        window.onload = initGame;
         sendBtn.addEventListener('click', handleGame);
         userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleGame(); });
-        userInput.addEventListener('focus', () => { setTimeout(scrollToBottom, 300); });
     </script>
 </body>
 </html>
